@@ -71,7 +71,7 @@ export function PerformanceMonitor() {
   }
 
   return (
-    <div className="fixed top-4 right-4 z-50 bg-dark-800/90 backdrop-blur-sm border border-dark-600 rounded-lg p-3 text-xs text-light-200 font-mono">
+    <div className="fixed top-4 right-4 z-50 bg-dark-800/90 backdrop-blur-sm border border-dark-600 rounded-xl p-3 text-xs text-light-200 font-mono">
       <div className="flex flex-col gap-1">
         <div>FPS: {metrics.fps}</div>
         <div>Memory: {metrics.memory}MB</div>

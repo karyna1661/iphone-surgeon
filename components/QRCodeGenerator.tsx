@@ -36,7 +36,7 @@ export function QRCodeGenerator({ url, size = 200, className }: QRCodeGeneratorP
 
   if (isLoading) {
     return (
-      <div className={cn("flex items-center justify-center bg-white rounded-lg", className)} style={{ width: size, height: size }}>
+      <div className={cn("flex items-center justify-center bg-white rounded-xl", className)} style={{ width: size, height: size }}>
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
       </div>
     )
@@ -44,7 +44,7 @@ export function QRCodeGenerator({ url, size = 200, className }: QRCodeGeneratorP
 
   if (error) {
     return (
-      <div className={cn("flex items-center justify-center bg-red-50 border border-red-200 rounded-lg p-4", className)} style={{ width: size, height: size }}>
+      <div className={cn("flex items-center justify-center bg-red-50 border border-red-200 rounded-xl p-4", className)} style={{ width: size, height: size }}>
         <p className="text-red-600 text-sm text-center">{error}</p>
       </div>
     )
@@ -55,7 +55,7 @@ export function QRCodeGenerator({ url, size = 200, className }: QRCodeGeneratorP
       <img
         src={qrCodeUrl}
         alt={`QR Code for ${url}`}
-        className="rounded-lg shadow-lg"
+        className="rounded-xl shadow-lg"
         style={{ width: size, height: size }}
         onLoad={() => setIsLoading(false)}
         onError={() => setError('Failed to load QR code')}

@@ -1,197 +1,206 @@
-<!-- 031305cd-b99a-48b0-9229-24f0cbe53db0 a21d47d3-d1e1-4365-9271-53834a9fcca7 -->
-# Complete Project Restoration & GitHub Commit
+<!-- 031305cd-b99a-48b0-9229-24f0cbe53db0 dd93ac7b-d156-4f1e-837a-b37b3af8d6c9 -->
+# Fix iPhone Surgeon Configuration & Dependencies
 
-## Phase 1: Fix Dependencies & Foundation (5-10 min)
+## Problem Analysis
 
-### Step 1: Clean Install
-- Delete corrupted node_modules
-- Clear npm cache
-- Reinstall all dependencies
-- Verify installation success
+Three critical issues preventing the website from working:
 
-### Step 2: Create Missing Directories
-```
-components/
-  ui/
-  sections/
-  layout/
-lib/
-  hooks/
-  sanity/
-sanity/
-  schemas/
-```
+1. **Missing .env.local file** - Sanity is falling back to "demo-project-id" instead of "1q42p9pa"
+2. **Next.js dependency corruption** - Module 'next/dist/compiled/loader-runner' not found
+3. **File locks on node_modules** - Running dev server holding file locks
 
-## Phase 2: Recreate Components (20-30 min)
+## Implementation Plan
 
-### UI Components (Priority Order)
-1. `components/ui/Button.tsx` - Magnetic hover, ripple, 4 variants
-2. `components/ui/Card.tsx` - Glass/bordered/elevated, 3D tilt
-3. `components/ui/Container.tsx` - Max-width wrapper
-4. `components/ui/Section.tsx` - Spacing wrapper
-5. `components/ui/Input.tsx` - Form input with validation
-6. `components/ui/Textarea.tsx` - Multi-line input
-7. `components/ui/Checkbox.tsx` - Checkbox component
-8. `components/ui/BeforeAfterSlider.tsx` - Interactive slider with drag
-9. `components/ui/index.ts` - Export all UI components
+### Step 1: Stop All Running Processes
 
-### Section Components
-1. `components/sections/Hero.tsx` - Video background, CTAs
-2. `components/sections/Gallery.tsx` - Before/after showcase
-3. `components/sections/Testimonials.tsx` - Client quotes
-4. `components/sections/Services.tsx` - Repair services with icons
-5. `components/sections/BehindTheBench.tsx` - Personal story
-6. `components/sections/Booking.tsx` - Contact form with WhatsApp
-7. `components/sections/Footer.tsx` - Business info, QR code
-8. `components/sections/index.ts` - Export all sections
+Kill any running dev servers that are holding file locks on node_modules.
 
-### Layout Components
-1. `components/layout/PageWrapper.tsx` - Page layout wrapper
-2. `components/layout/index.ts` - Export layout components
+**Action:** Close all terminal windows or press Ctrl+C on any running `npm run dev` processes.
 
-### Utility Components
-1. `components/PerformanceMonitor.tsx` - Dev performance tracking
-2. `components/MobileTestingPanel.tsx` - QR code testing
-3. `components/QRCodeGenerator.tsx` - QR code generator
-4. `components/ErrorBoundary.tsx` - Error handling
+### Step 2: Create Missing .env.local File
 
-## Phase 3: Recreate Library Files (10-15 min)
+The root cause of Sanity errors is the missing `.env.local` file. The client configuration at `lib/sanity/client.ts:13` falls back to 'demo-project-id' when the environment variable is missing.
 
-### Constants & Utilities
-1. `lib/constants.ts` - Business info, contact details
-2. `lib/utils.ts` - Utility functions (cn, generateWhatsAppLink, etc.)
-3. `lib/fonts.ts` - Font configuration
-4. `lib/galleryData.ts` - Gallery fallback data
-5. `lib/servicesData.ts` - Services fallback data
-6. `lib/testimonialsData.ts` - Testimonials fallback data
+**Create:** `.env.local`
 
-### Custom Hooks
-1. `lib/hooks/useIntersectionObserver.ts` - Scroll animations
-2. `lib/hooks/index.ts` - Export hooks
-
-### Sanity Integration
-1. `lib/sanity/client.ts` - Sanity client setup
-2. `lib/sanity/queries.ts` - GROQ queries
-3. `lib/sanity/types.ts` - TypeScript types
-4. `lib/sanity/imageUrlBuilder.ts` - Image URL builder
-
-## Phase 4: Recreate Sanity Schemas (5-10 min)
-
-1. `sanity/sanity.config.ts` - Sanity configuration
-2. `sanity/sanity.cli.ts` - CLI configuration
-3. `sanity/schemas/gallery.ts` - Gallery content type
-4. `sanity/schemas/testimonial.ts` - Testimonial content type
-5. `sanity/schemas/service.ts` - Service content type
-6. `sanity/schemas/index.ts` - Export schemas
-
-## Phase 5: Create Studio Page (FIXED) (5 min)
-
-1. Create `app/studio/[[...index]]/` directory
-2. Create `app/studio/[[...index]]/page.tsx` with **CORRECT imports**:
-```typescript
-import { NextStudio } from 'next-sanity/studio'
-import config from '@/sanity/sanity.config'
-
-export const dynamic = 'force-dynamic'
-export { metadata, viewport } from 'next-sanity/studio'
-
-export default function StudioPage() {
-  return <NextStudio config={config} />
-}
+```env
+NEXT_PUBLIC_SANITY_PROJECT_ID=1q42p9pa
+NEXT_PUBLIC_SANITY_DATASET=production
+NEXT_PUBLIC_SANITY_API_VERSION=2024-03-15
+NEXT_PUBLIC_SITE_URL=http://localhost:3001
+NEXT_PUBLIC_WHATSAPP_NUMBER=2348137676117
+NEXT_PUBLIC_BUSINESS_NAME=iPhone Surgeon
+NEXT_PUBLIC_INSTAGRAM_HANDLE=@TheiPhoneSurgeon
 ```
 
-## Phase 6: Install Missing Dependencies (5 min)
+This will fix both the Sanity client and the Studio configuration immediately.
 
-Install Mux dependencies to fix Studio errors:
+### Step 3: Clean Node Modules (Careful Approach)
+
+After stopping all processes, remove node_modules directory.
+
+**Commands:**
+
+```powershell
+# Wait 5 seconds for processes to fully release file handles
+Start-Sleep -Seconds 5
+
+# Force remove with all possible flags
+Remove-Item -Path "node_modules" -Recurse -Force -ErrorAction SilentlyContinue
+
+# If still fails, use robocopy to purge (Windows-specific workaround)
+robocopy node_modules node_modules_empty /MIR
+Remove-Item -Path "node_modules" -Force
+Remove-Item -Path "node_modules_empty" -Force
+```
+
+### Step 4: Clear Build Cache
+
+Remove Next.js build cache that might be causing issues.
+
+**Commands:**
+
+```powershell
+Remove-Item -Path ".next" -Recurse -Force -ErrorAction SilentlyContinue
+npm cache clean --force
+```
+
+### Step 5: Fresh Dependency Install
+
+Install all dependencies from scratch.
+
+**Command:**
+
 ```bash
-npm install @mux/mux-video @mux/mux-video-react hls.js react-is
+npm install
 ```
 
-## Phase 7: Update Main Page (5 min)
+**Expected packages (from package.json):**
 
-Replace placeholder `app/page.tsx` with full homepage importing all sections from Sanity.
+- next@^14.2.0
+- react@^18.3.0
+- @sanity/client@^6.15.0
+- sanity@^3.37.0
+- All UI dependencies (lucide-react, tailwind, etc.)
 
-## Phase 8: Testing (5-10 min)
+### Step 6: Verify Environment Variables
 
-1. Start dev server: `npm run dev`
-2. Test homepage loads at `localhost:3001`
-3. Test Studio loads at `localhost:3001/studio`
-4. Verify no console errors
-5. Check all sections render properly
+Check that environment variables are properly loaded.
 
-## Phase 9: Git Commit & Push (5 min)
+**Test command:**
 
-### Initialize Git (if needed)
 ```bash
-git init
-git remote add origin <your-repo-url>
+npm run dev
 ```
 
-### Create .gitignore
+**What to verify:**
+
+- Server starts on port 3001
+- No "demo-project-id" errors in console
+- Homepage loads at http://localhost:3001
+- All sections render (Hero, Gallery, Testimonials, etc.)
+
+### Step 7: Test Studio Access
+
+Verify Studio works without 500 errors.
+
+**Navigate to:** http://localhost:3001/studio
+
+**Expected behavior:**
+
+- Studio loads successfully
+- Shows "iPhone Surgeon CMS" interface
+- Can access Gallery, Testimonial, Service content types
+- No metadata/viewport import errors
+
+### Step 8: Add .env.local to .gitignore
+
+Ensure sensitive environment variables aren't committed.
+
+**Update:** `.gitignore`
+
 ```
 node_modules/
 .next/
 .env.local
+.env*.local
 *.log
 .DS_Store
 ```
 
-### Commit Everything
+### Step 9: Commit Fixed Configuration
+
+Once everything works locally, commit the fixes.
+
+**Commands:**
+
 ```bash
 git add .
-git commit -m "feat: complete iPhone Surgeon website with Sanity CMS integration
+git commit -m "fix: add missing .env.local configuration and fix dependencies
 
-- Added all UI components (Button, Card, Input, etc.)
-- Added all sections (Hero, Gallery, Testimonials, Services, etc.)
-- Integrated Sanity CMS for content management
-- Fixed Studio errors with correct imports
-- Added scroll animations and glassmorphism effects
-- Implemented before/after image sliders
-- Added WhatsApp booking integration
-- Configured SEO and metadata
-- Added performance monitoring tools"
+- Created .env.local with correct Sanity project ID (1q42p9pa)
+- Fixed 'demo-project-id' fallback issue in Sanity client
+- Cleaned and reinstalled corrupted dependencies
+- Verified homepage and Studio load without errors
+- Added .env.local to .gitignore for security"
 
-git push -u origin main
+git push origin master
 ```
+
+## Files Modified
+
+1. `.env.local` (CREATE) - Environment variables with correct Sanity project ID
+2. `.gitignore` (UPDATE) - Add .env.local exclusion
+3. `node_modules/` (REBUILD) - Fresh install after corruption fix
+
+## Files Already Correct
+
+- `lib/sanity/client.ts` - Already has fallback logic, just needs env var
+- `sanity/sanity.config.ts` - Already reads from env var
+- `app/studio/[[...index]]/page.tsx` - Already has correct imports (no metadata/viewport)
+
+## Current Status (Updated)
+
+✅ **Completed:**
+
+- Stopped all Node processes
+- Created .env.local with correct Sanity project ID (1q42p9pa)
+- Cleaned node_modules and .next cache
+- npm cache cleaned
+
+⚠️ **Network Issues Encountered:**
+
+- npm install failed with ECONNRESET and ETIMEDOUT errors
+- Partial installation completed - many packages installed but incomplete
+- `npx next` using v15.5.6 from global cache, missing `critters` dependency
+
+## Updated Strategy
+
+Since network is unstable, we'll take a pragmatic approach:
+
+1. **Install missing critters package directly**
+2. **Use local node_modules/next binary instead of npx**
+3. **Test if website works with current partial installation**
+4. **Fix any remaining missing packages one by one**
 
 ## Success Criteria
 
-- ✅ All dependencies installed without errors
-- ✅ All components recreated from conversation history
-- ✅ Dev server starts successfully
-- ✅ Homepage displays all sections
-- ✅ Studio loads without 500 errors
-- ✅ Sanity CMS integration works
-- ✅ Same beautiful design restored
-- ✅ Code committed to GitHub
+- No "demo-project-id" errors in console
+- Homepage loads with all sections visible
+- Studio accessible at /studio without 500 errors
+- All Sanity queries work correctly
+- Dev server starts without module errors
+- Changes committed to GitHub
 
-## Files Created Count
+## Estimated Time
 
-- **UI Components**: 9 files
-- **Section Components**: 8 files  
-- **Layout Components**: 2 files
-- **Utility Components**: 4 files
-- **Library Files**: 10 files
-- **Sanity Files**: 8 files
-- **Config Files**: Already done
-- **Total**: ~41 files to recreate
-
-## Estimated Total Time
-
-- Phase 1: 10 min
-- Phase 2: 30 min
-- Phase 3: 15 min
-- Phase 4: 10 min
-- Phase 5: 5 min
-- Phase 6: 5 min
-- Phase 7: 5 min
-- Phase 8: 10 min
-- Phase 9: 5 min
-- **Total**: 95 minutes (~1.5 hours)
-
-## Note
-
-Every file will be recreated **exactly** as it was from the conversation history. You'll get back the same beautiful, polished iPhone Surgeon website you loved! 🚀
+- Stop processes: 1 min
+- Create .env.local: 2 min
+- Clean dependencies: 5 min
+- Reinstall: 5-10 min (network dependent)
+- Testing: 5 min
+- Commit: 2 min
+- **Total: 20-25 minutes**
 
 ### To-dos
 

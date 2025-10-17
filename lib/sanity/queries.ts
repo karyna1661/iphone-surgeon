@@ -34,6 +34,12 @@ const servicesQuery = `*[_type == "service"] | order(featured desc, order asc, _
 
 export async function getGalleryItems(): Promise<GalleryItem[]> {
   try {
+    // Check if we have a valid project ID
+    if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === 'demo-project-id') {
+      console.warn('Using demo data for gallery items - no Sanity project configured')
+      return [] // Return empty array for demo
+    }
+
     const rawData = await sanityFetch<GalleryItemRaw[]>({
       query: galleryQuery,
       revalidate: 3600, // Revalidate every hour
@@ -53,6 +59,12 @@ export async function getGalleryItems(): Promise<GalleryItem[]> {
 
 export async function getTestimonials(): Promise<TestimonialItem[]> {
   try {
+    // Check if we have a valid project ID
+    if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === 'demo-project-id') {
+      console.warn('Using demo data for testimonials - no Sanity project configured')
+      return [] // Return empty array for demo
+    }
+
     const rawData = await sanityFetch<TestimonialItemRaw[]>({
       query: testimonialsQuery,
       revalidate: 3600,
@@ -71,6 +83,12 @@ export async function getTestimonials(): Promise<TestimonialItem[]> {
 
 export async function getServices(): Promise<ServiceItem[]> {
   try {
+    // Check if we have a valid project ID
+    if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === 'demo-project-id') {
+      console.warn('Using demo data for services - no Sanity project configured')
+      return [] // Return empty array for demo
+    }
+
     return await sanityFetch<ServiceItem[]>({
       query: servicesQuery,
       revalidate: 3600,

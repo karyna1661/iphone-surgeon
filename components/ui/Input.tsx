@@ -1,6 +1,6 @@
 'use client'
 
-import { forwardRef, useState } from 'react'
+import { forwardRef, useState, useId } from 'react'
 import { cn } from '@/lib/utils'
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -12,7 +12,8 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, label, error, helperText, id, ...props }, ref) => {
     const [isFocused, setIsFocused] = useState(false)
-    const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`
+    const generatedId = useId()
+    const inputId = id || generatedId
 
     return (
       <div className="w-full">
@@ -31,7 +32,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             className={cn(
-              'w-full px-4 py-3 rounded-xl bg-dark-800 border-2 border-dark-600 text-light-50 placeholder:text-light-600 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:shadow-glow-primary focus:scale-[1.01] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed',
+              'w-full px-4 py-3 rounded-2xl bg-dark-800 border-2 border-dark-600 text-light-50 placeholder:text-light-600 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:shadow-glow-primary focus:scale-[1.01] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed',
               error && 'border-red-500 focus:border-red-500 focus:ring-red-500/20',
               isFocused && 'border-primary-500',
               className

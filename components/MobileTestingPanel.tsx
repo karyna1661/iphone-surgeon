@@ -27,7 +27,7 @@ export function MobileTestingPanel() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 bg-dark-800/95 backdrop-blur-sm border border-dark-600 rounded-lg p-4 max-w-sm">
+    <div className="fixed bottom-4 right-4 z-50 bg-dark-800/95 backdrop-blur-sm border border-dark-600 rounded-xl p-4 max-w-sm">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold text-light-50">Mobile Testing</h3>
         <button

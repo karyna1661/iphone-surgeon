@@ -4,12 +4,14 @@ import { useState, useRef, useCallback } from 'react'
 import { cn } from '@/lib/utils'
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'glass' | 'bordered' | 'elevated'
-  padding?: 'none' | 'sm' | 'md' | 'lg'
+  variant?: 'default' | 'glass' | 'bordered' | 'elevated' | 'premium'
+  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl'
   hover?: boolean
   tilt?: boolean
-  depth?: 'none' | 'low' | 'medium' | 'high'
+  depth?: 'none' | 'low' | 'medium' | 'high' | 'premium'
   glowOnHover?: boolean
+  shimmer?: boolean
+  gradientBorder?: boolean
   children: React.ReactNode
 }
 
@@ -20,6 +22,8 @@ export function Card({
   tilt = false,
   depth = 'none',
   glowOnHover = false,
+  shimmer = false,
+  gradientBorder = false,
   className,
   children,
   ...props
@@ -50,32 +54,37 @@ export function Card({
     setIsHovered(false)
   }, [tilt])
 
-  const baseClasses = 'transition-all duration-300'
+  const baseClasses = 'transition-all duration-300 relative rounded-2xl'
 
   const variantClasses = {
-    default: 'bg-dark-800 border border-dark-700',
+    default: 'bg-surface-2 border border-surface-3',
     glass: 'glass-card',
-    bordered: 'bg-dark-800 border-2 border-dark-600',
-    elevated: 'bg-dark-800 shadow-lg'
+    bordered: 'bg-surface-2 border-2 border-surface-3',
+    elevated: 'bg-surface-2 shadow-depth-2',
+    premium: 'glass-premium'
   }
 
   const paddingClasses = {
     none: '',
     sm: 'p-4',
     md: 'p-6',
-    lg: 'p-8'
+    lg: 'p-8',
+    xl: 'p-10'
   }
 
   const depthClasses = {
     none: '',
-    low: 'shadow-md',
-    medium: 'shadow-lg',
-    high: 'shadow-xl'
+    low: 'shadow-depth-1',
+    medium: 'shadow-depth-2',
+    high: 'shadow-depth-3',
+    premium: 'shadow-depth-4'
   }
 
-  const hoverClasses = hover ? 'hover:scale-[1.02] hover:shadow-card-hover' : ''
-  const tiltClasses = tilt ? 'tilt-hover gpu-accelerated' : ''
+  const hoverClasses = hover ? 'hover:scale-[1.02] hover:shadow-card-lift hover:-translate-y-1' : ''
+  const tiltClasses = tilt ? 'tilt-hover' : ''
   const glowClasses = glowOnHover && isHovered ? 'shadow-glow-primary-lg' : ''
+  const shimmerClasses = shimmer ? 'card-shimmer' : ''
+  const gradientBorderClasses = gradientBorder ? 'before:absolute before:inset-0 before:rounded-inherit before:p-[1px] before:bg-gradient-to-r before:from-primary-500 before:to-primary-600 before:-z-10' : ''
 
   const cardClasses = cn(
     baseClasses,
@@ -85,6 +94,8 @@ export function Card({
     hoverClasses,
     tiltClasses,
     glowClasses,
+    shimmerClasses,
+    gradientBorderClasses,
     className
   )
 

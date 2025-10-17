@@ -1,6 +1,6 @@
 'use client'
 
-import { forwardRef, useState } from 'react'
+import { forwardRef, useState, useId } from 'react'
 import { cn } from '@/lib/utils'
 
 export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
@@ -12,7 +12,8 @@ export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputE
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   ({ className, label, description, error, id, ...props }, ref) => {
     const [isFocused, setIsFocused] = useState(false)
-    const checkboxId = id || `checkbox-${Math.random().toString(36).substr(2, 9)}`
+    const generatedId = useId()
+    const checkboxId = id || generatedId
 
     return (
       <div className="w-full">
@@ -23,7 +24,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               id={checkboxId}
               type="checkbox"
               className={cn(
-                'w-5 h-5 rounded-md mt-0.5 bg-dark-800 border-2 border-dark-600 text-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-dark-900 focus:shadow-glow-primary hover:scale-105 hover:border-primary-400 checked:scale-110 transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed',
+                'w-5 h-5 rounded-lg mt-0.5 bg-dark-800 border-2 border-dark-600 text-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-dark-900 focus:shadow-glow-primary hover:scale-105 hover:border-primary-400 checked:scale-110 transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed',
                 error && 'border-red-500 focus:border-red-500 focus:ring-red-500',
                 isFocused && 'border-primary-500',
                 className

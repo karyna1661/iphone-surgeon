@@ -1,6 +1,6 @@
 'use client'
 
-import { Section, Card, Button } from '@/components/ui'
+import { Section, Card, Button, AnimatedText, NumberCounter } from '@/components/ui'
 import { ServiceItem } from '@/lib/sanity/types'
 import { useIntersectionObserver } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
@@ -12,7 +12,9 @@ import {
   Battery, 
   Camera, 
   Droplet, 
-  Wrench 
+  Wrench,
+  ArrowRight,
+  Calendar
 } from 'lucide-react'
 
 interface ServicesProps {
@@ -43,26 +45,36 @@ export function Services({ items }: ServicesProps) {
   return (
     <Section spacing="lg" background="darker">
       {/* Section Header */}
-      <div ref={headerRef} className="text-center mb-12">
+      <div ref={headerRef} className="text-center mb-16">
         <h2 className={cn(
-          "text-display xs:text-display-sm sm:text-display-md font-bold text-light-50 mb-4 transition-all duration-800",
-          headerVisible ? "animate-fadeIn" : "opacity-0"
+          "text-display-md xs:text-display-lg sm:text-display-lg font-bold text-light-50 mb-6 transition-all duration-1000",
+          headerVisible ? "animate-blurFadeIn" : "opacity-0 blur-sm"
         )}>
-          Expert Repair Services
+          <AnimatedText 
+            text="Expert Repair Services"
+            type="word"
+            delay={200}
+            duration={0.6}
+          />
         </h2>
-        <p className={cn(
-          "text-base xs:text-lg sm:text-xl text-light-300 text-center max-w-3xl mx-auto mb-8 xs:mb-10 sm:mb-12 transition-all duration-800 px-4",
-          headerVisible ? "animate-slideUp animation-delay-200" : "opacity-0 translate-y-8"
+        <div className={cn(
+          "text-lg xs:text-xl sm:text-2xl text-light-300 text-center max-w-4xl mx-auto mb-12 transition-all duration-1000",
+          headerVisible ? "animate-slideUp animation-delay-400" : "opacity-0 translate-y-8"
         )}>
-          From cracked screens to water damage, we handle all iPhone repairs with precision and care.
-        </p>
+          <AnimatedText 
+            text="From cracked screens to water damage, we handle all iPhone repairs with precision and care."
+            type="character"
+            delay={800}
+            duration={1.0}
+          />
+        </div>
       </div>
 
       {/* Services Grid */}
       <div 
         ref={gridRef}
         className={cn(
-          "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 xs:gap-8 mb-8 xs:mb-10 sm:mb-12 px-4",
+          "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 xs:gap-10 mb-16 xs:mb-20 px-4",
           gridVisible && "will-change-transform"
         )}
       >
@@ -72,43 +84,53 @@ export function Services({ items }: ServicesProps) {
           return (
             <Card
               key={item.id}
-              variant="bordered"
-              padding="lg"
+              variant="premium"
+              padding="xl"
               hover={true}
               tilt
-              depth="medium"
+              depth="premium"
               glowOnHover
+              shimmer
+              gradientBorder
               className={cn(
-                "text-center transition-all duration-800 stagger-item",
+                "text-center transition-all duration-1000 stagger-item group",
                 gridVisible ? "animate-scaleIn" : "opacity-0 translate-y-8"
               )}
               style={{ 
-                animationDelay: gridVisible ? `${index * 100}ms` : '0ms' 
+                animationDelay: gridVisible ? `${index * 150}ms` : '0ms' 
               }}
             >
+              {/* Service Number */}
+              <div className="absolute top-6 left-6 text-2xl font-bold text-primary-400/30 group-hover:text-primary-400/60 transition-colors duration-300">
+                {String(index + 1).padStart(2, '0')}
+              </div>
+
               {/* Icon */}
-              <div className="w-16 h-16 mx-auto mb-6 bg-primary-500/10 rounded-full flex items-center justify-center">
-                <IconComponent className="w-8 h-8 text-primary-400" />
+              <div className="w-20 h-20 mx-auto mb-8 bg-gradient-to-br from-primary-500/20 to-primary-600/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <IconComponent className="w-10 h-10 text-primary-400 group-hover:text-primary-300 transition-colors duration-300" />
               </div>
 
               {/* Title */}
-              <h3 className="text-xl font-semibold text-light-50 mb-4">
+              <h3 className="text-2xl font-semibold text-light-50 mb-6 group-hover:text-primary-300 transition-colors duration-300">
                 {item.title}
               </h3>
 
               {/* Description */}
-              <p className="text-light-300 text-base leading-relaxed mb-6">
+              <p className="text-light-300 text-lg leading-relaxed mb-8 group-hover:text-light-200 transition-colors duration-300">
                 {item.description}
               </p>
 
               {/* CTA */}
               <Button
                 variant="outline"
-                size="sm"
+                size="lg"
                 href={generateWhatsAppLink(WHATSAPP_NUMBER, `Hi! I need ${item.title} service. Can you help?`)}
-                className="w-full"
+                className="w-full group-hover:bg-primary-500 group-hover:text-white group-hover:border-primary-500 transition-all duration-300"
+                magnetic
+                glowIntensity="medium"
               >
-                Get Quote
+                Learn More
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
               </Button>
             </Card>
           )
@@ -117,23 +139,35 @@ export function Services({ items }: ServicesProps) {
 
       {/* Main CTA */}
       <div className={cn(
-        "text-center transition-all duration-800",
+        "text-center transition-all duration-1000",
         gridVisible ? "animate-fadeIn animation-delay-800" : "opacity-0"
       )}>
         <Button
-          variant="primary"
-          size="lg"
+          variant="premium"
+          size="xl"
           href={generateWhatsAppLink(WHATSAPP_NUMBER, WHATSAPP_DEFAULT_MESSAGE)}
           magnetic
           ripple
           glowIntensity="high"
-          className="mb-4"
+          shimmer
+          className="mb-6"
         >
-          📱 Book Your Repair Now
+          <Calendar className="w-6 h-6" />
+          Book Your Repair Now
         </Button>
-        <p className="text-light-400 text-sm">
-          Same-day service available • Free diagnostic • Professional warranty
-        </p>
+        <div className="text-light-400 text-base space-y-2">
+          <p>Same-day service available • Free diagnostic • Professional warranty</p>
+          <div className="flex items-center justify-center gap-8 text-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-primary-400 rounded-full animate-pulse" />
+              <span>500+ Repairs Completed</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-primary-400 rounded-full animate-pulse" />
+              <span>99% Success Rate</span>
+            </div>
+          </div>
+        </div>
       </div>
     </Section>
   )

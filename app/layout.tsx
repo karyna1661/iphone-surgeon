@@ -1,13 +1,14 @@
 import type { Metadata, Viewport } from 'next';
-import { Poppins } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { PerformanceMonitor } from '@/components/PerformanceMonitor';
 import { MobileTestingPanel } from '@/components/MobileTestingPanel';
 
-const poppins = Poppins({
+const inter = Inter({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-poppins',
+  variable: '--font-inter',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -216,7 +217,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className={poppins.variable}>
+    <html lang="en" className={inter.variable}>
       <head>
         <script
           type="application/ld+json"
@@ -225,7 +226,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${poppins.className} antialiased`} suppressHydrationWarning={true}>
+      <body className={`${inter.className} antialiased`} suppressHydrationWarning={true}>
         {process.env.NODE_ENV === 'development' && <PerformanceMonitor />}
         {children}
         {process.env.NODE_ENV === 'development' && <MobileTestingPanel />}

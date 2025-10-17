@@ -1,10 +1,11 @@
 'use client'
 
-import { Button } from '@/components/ui'
+import { Button, AnimatedText } from '@/components/ui'
 import { useIntersectionObserver } from '@/lib/hooks'
 import { cn } from '@/lib/utils'
 import { generateWhatsAppLink } from '@/lib/utils'
 import { WHATSAPP_NUMBER, WHATSAPP_DEFAULT_MESSAGE } from '@/lib/constants'
+import { ChevronDown, Calendar, Eye } from 'lucide-react'
 
 export function Hero() {
   // Scroll-triggered animations
@@ -22,111 +23,130 @@ export function Hero() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
-      {/* Video Background */}
-      <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover opacity-30"
-          poster="/images/hero-poster.webp"
-        >
-          <source src="/videos/hero-repair-process.mp4" type="video/mp4" />
-          {/* Fallback image if video doesn't load */}
-          <img 
-            src="/images/hero-poster.webp" 
-            alt="iPhone repair process" 
-            className="w-full h-full object-cover"
-          />
-        </video>
+      {/* Animated Gradient Background */}
+      <div className="absolute inset-0 z-0 gradient-animated">
+        {/* Floating Particles */}
+        <div className="floating-particles">
+          {Array.from({ length: 20 }).map((_, i) => (
+            <div
+              key={i}
+              className="particle"
+              style={{
+                left: `${(i * 5) % 100}%`,
+                top: `${(i * 7) % 100}%`,
+                animationDelay: `${(i * 0.3)}s`,
+                animationDuration: `${4 + (i % 3)}s`
+              }}
+            />
+          ))}
+        </div>
         
-        {/* Parallax overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70" />
+        {/* Grid Overlay */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="h-full w-full" style={{
+            backgroundImage: `
+              linear-gradient(rgba(0, 113, 227, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0, 113, 227, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '50px 50px'
+          }} />
+        </div>
+        
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80" />
       </div>
 
       {/* Content */}
       <div 
         ref={containerRef}
-        className="relative z-10 text-center px-4 max-w-4xl mx-auto"
+        className="relative z-10 text-center px-4 max-w-6xl mx-auto"
       >
         {/* Main Headline */}
         <h1 className={cn(
-          "text-hero xs:text-display sm:text-display-md font-bold text-light-50 mb-6 leading-tight transition-all duration-800",
-          containerVisible ? "animate-fadeIn" : "opacity-0"
+          "text-5xl xs:text-6xl sm:text-7xl lg:text-display-lg font-bold text-light-50 mb-8 leading-tight transition-all duration-1000",
+          containerVisible ? "animate-blurFadeIn" : "opacity-0 blur-sm"
         )}>
-          Proof You Can See.
-          <br />
-          <span className="text-primary-400">Precision You Can Feel.</span>
+          <AnimatedText 
+            text="Precision You Can See."
+            type="word"
+            delay={200}
+            duration={0.6}
+            className="block mb-2"
+          />
+          <AnimatedText 
+            text="Trust You Can Feel."
+            type="word"
+            delay={800}
+            duration={0.6}
+            className="block text-primary-400"
+          />
         </h1>
 
         {/* Subheadline */}
-        <p className={cn(
-          "text-lg xs:text-xl sm:text-2xl text-light-300 mb-8 xs:mb-10 sm:mb-12 max-w-3xl mx-auto transition-all duration-800",
-          containerVisible ? "animate-slideUp animation-delay-200" : "opacity-0 translate-y-8"
+        <div className={cn(
+          "text-2xl xs:text-3xl sm:text-4xl lg:text-3xl text-light-300 mb-12 xs:mb-16 sm:mb-20 max-w-4xl mx-auto transition-all duration-1000",
+          containerVisible ? "animate-slideUp animation-delay-400" : "opacity-0 translate-y-8"
         )}>
-          Every iPhone repair comes with documented before-and-after proof. 
-          Because trust isn't built on promises—it's built on results.
-        </p>
+          <AnimatedText 
+            text="Every iPhone repair comes with documented before-and-after proof. Because trust isn't built on promises, it's built on results."
+            type="character"
+            delay={1200}
+            duration={1.2}
+          />
+        </div>
 
         {/* CTAs */}
         <div className={cn(
-          "flex flex-col xs:flex-row gap-4 xs:gap-6 justify-center items-center transition-all duration-800",
-          containerVisible ? "animate-slideUp animation-delay-400" : "opacity-0 translate-y-8"
+          "flex flex-col lg:flex-row gap-6 lg:gap-8 justify-center items-center transition-all duration-1000",
+          containerVisible ? "animate-scaleIn animation-delay-600" : "opacity-0 scale-95"
         )}>
           <Button
-            variant="primary"
-            size="lg"
+            variant="premium"
+            size="xl"
             href={generateWhatsAppLink(WHATSAPP_NUMBER, WHATSAPP_DEFAULT_MESSAGE)}
             magnetic
             ripple
             glowIntensity="high"
-            className="w-full xs:w-auto"
+            shimmer
+            className="w-full lg:w-auto"
           >
-            📱 Book a Repair
+            <Calendar className="w-5 h-5" />
+            Book a Repair
           </Button>
           
           <Button
             variant="outline"
-            size="lg"
+            size="xl"
             onClick={handleWatchProof}
             magnetic
             glowIntensity="medium"
-            className="w-full xs:w-auto"
+            className="w-full lg:w-auto"
           >
-            👁️ Watch the Proof
+            <Eye className="w-5 h-5" />
+            Watch the Proof
           </Button>
         </div>
 
         {/* Trust Indicators */}
         <div className={cn(
-          "mt-12 xs:mt-16 sm:mt-20 flex flex-col xs:flex-row items-center justify-center gap-6 xs:gap-8 text-sm text-light-400 transition-all duration-800",
-          containerVisible ? "animate-fadeIn animation-delay-600" : "opacity-0"
+          "mt-16 xs:mt-20 sm:mt-24 flex flex-col xs:flex-row items-center justify-center gap-8 xs:gap-12 text-base text-light-400 transition-all duration-1000",
+          containerVisible ? "animate-fadeIn animation-delay-800" : "opacity-0"
         )}>
-          <div className="flex items-center gap-2">
-            <span className="text-primary-400">✓</span>
+          <div className="flex items-center gap-3">
+            <div className="w-2 h-2 bg-primary-400 rounded-full animate-pulse" />
             <span>Same-Day Service</span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-primary-400">✓</span>
+          <div className="flex items-center gap-3">
+            <div className="w-2 h-2 bg-primary-400 rounded-full animate-pulse" />
             <span>Before/After Documentation</span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-primary-400">✓</span>
+          <div className="flex items-center gap-3">
+            <div className="w-2 h-2 bg-primary-400 rounded-full animate-pulse" />
             <span>Professional Warranty</span>
           </div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <div className={cn(
-        "absolute bottom-8 left-1/2 transform -translate-x-1/2 transition-all duration-800",
-        containerVisible ? "animate-floatUp animation-delay-800" : "opacity-0"
-      )}>
-        <div className="w-6 h-10 border-2 border-light-400 rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-light-400 rounded-full mt-2 animate-bounce" />
-        </div>
-      </div>
     </section>
   )
 }

@@ -4,13 +4,14 @@ import { useState, useRef, useCallback } from 'react'
 import { cn } from '@/lib/utils'
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost'
-  size?: 'sm' | 'md' | 'lg'
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'premium'
+  size?: 'sm' | 'md' | 'lg' | 'xl'
   loading?: boolean
   href?: string
   magnetic?: boolean
   ripple?: boolean
   glowIntensity?: 'none' | 'low' | 'medium' | 'high'
+  shimmer?: boolean
   children: React.ReactNode
 }
 
@@ -22,6 +23,7 @@ export function Button({
   magnetic = false,
   ripple = false,
   glowIntensity = 'none',
+  shimmer = false,
   className,
   children,
   onClick,
@@ -75,19 +77,21 @@ export function Button({
     }
   }, [ripple, onClick])
 
-  const baseClasses = 'inline-flex items-center justify-center gap-2 font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-dark-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none'
+  const baseClasses = 'inline-flex items-center justify-center gap-2 font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none relative overflow-hidden'
 
   const variantClasses = {
-    primary: 'bg-primary-500 text-dark-800 hover:bg-primary-600 active:scale-95',
-    secondary: 'bg-dark-700 text-light-50 hover:bg-dark-600 active:scale-95',
-    outline: 'bg-transparent border-2 border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-dark-800 active:scale-95',
-    ghost: 'bg-transparent text-light-50 hover:bg-dark-800 active:scale-95'
+    primary: 'bg-primary-500 text-white hover:bg-primary-600 active:scale-95 shadow-depth-2 hover:shadow-depth-3',
+    secondary: 'bg-surface-2 text-light-50 hover:bg-surface-3 active:scale-95 shadow-depth-1 hover:shadow-depth-2',
+    outline: 'bg-transparent border-2 border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-white active:scale-95 shadow-depth-1 hover:shadow-depth-2',
+    ghost: 'bg-transparent text-light-50 hover:bg-surface-2 active:scale-95',
+    premium: 'bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-600 hover:to-primary-700 active:scale-95 shadow-depth-3 hover:shadow-depth-4 border border-primary-400/20'
   }
 
   const sizeClasses = {
     sm: 'px-4 py-2 text-sm rounded-xl',
     md: 'px-6 py-3 text-base rounded-2xl',
-    lg: 'px-8 py-4 text-lg rounded-2xl'
+    lg: 'px-8 py-4 text-lg rounded-2xl',
+    xl: 'px-10 py-5 text-xl rounded-3xl'
   }
 
   const glowClasses = {
@@ -97,8 +101,9 @@ export function Button({
     high: 'hover:shadow-glow-primary-xl'
   }
 
-  const magneticClasses = magnetic ? 'magnetic-hover will-change-transform' : ''
-  const rippleClasses = ripple ? 'ripple-effect overflow-hidden' : ''
+  const magneticClasses = magnetic ? 'magnetic-element will-change-transform' : ''
+  const rippleClasses = ripple ? 'ripple-effect' : ''
+  const shimmerClasses = shimmer ? 'card-shimmer' : ''
 
   const buttonClasses = cn(
     baseClasses,
@@ -107,6 +112,7 @@ export function Button({
     glowClasses[glowIntensity],
     magneticClasses,
     rippleClasses,
+    shimmerClasses,
     className
   )
 

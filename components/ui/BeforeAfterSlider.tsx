@@ -159,7 +159,7 @@ export function BeforeAfterSlider({
   if (!hasValidImages) {
     return (
       <div className={cn(
-        'relative aspect-[3/2] overflow-hidden rounded-xl select-none bg-dark-800 flex items-center justify-center',
+        'relative aspect-[3/2] overflow-hidden rounded-2xl select-none bg-dark-800 flex items-center justify-center',
         className
       )}>
         <div className="text-center text-light-400">
@@ -178,12 +178,12 @@ export function BeforeAfterSlider({
     <div
       ref={containerRef}
       className={cn(
-        'relative aspect-[3/2] overflow-hidden rounded-xl select-none',
+        'relative aspect-[3/2] overflow-hidden rounded-2xl select-none',
         className
       )}
     >
       {/* After Image (Bottom Layer) */}
-      <div className="absolute inset-0 gpu-accelerated">
+      <div className="absolute inset-0">
         <Image
           src={imageError.after ? fallbackImage : afterImage}
           alt="After repair image"
@@ -201,7 +201,7 @@ export function BeforeAfterSlider({
       {/* Before Image (Top Layer) */}
       <div 
         className={cn(
-          "absolute inset-0 gpu-accelerated",
+          "absolute inset-0",
           isDragging && "will-change-clip-path"
         )}
         style={{ 
@@ -241,7 +241,7 @@ export function BeforeAfterSlider({
             'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
             'w-12 h-12 bg-primary-500 border-2 border-white rounded-full',
             'shadow-glow-primary flex items-center justify-center',
-            'hover:scale-110 transition-transform duration-200 gpu-accelerated',
+            'hover:scale-110 transition-transform duration-200',
             isDragging && 'scale-125 shadow-glow-primary-lg',
             !hasInteracted && 'animate-pulse-slow'
           )}
@@ -272,10 +272,10 @@ export function BeforeAfterSlider({
       </div>
 
       {/* Labels */}
-      <div className="absolute top-4 left-4 px-3 py-1 bg-dark-900/70 backdrop-blur-md rounded-lg text-xs text-light-50">
+      <div className="absolute top-4 left-4 px-3 py-1 bg-dark-900/70 backdrop-blur-md rounded-xl text-xs text-light-50">
         {beforeLabel}
       </div>
-      <div className="absolute top-4 right-4 px-3 py-1 bg-dark-900/70 backdrop-blur-md rounded-lg text-xs text-light-50">
+      <div className="absolute top-4 right-4 px-3 py-1 bg-dark-900/70 backdrop-blur-md rounded-xl text-xs text-light-50">
         {afterLabel}
       </div>
     </div>
