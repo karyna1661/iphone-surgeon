@@ -1,0 +1,7 @@
+export { Hero } from './Hero'
+export { Gallery } from './Gallery'
+export { Testimonials } from './Testimonials'
+export { Services } from './Services'
+export { BehindTheBench } from './BehindTheBench'
+export { Booking } from './Booking'
+export { Footer } from './Footer'
